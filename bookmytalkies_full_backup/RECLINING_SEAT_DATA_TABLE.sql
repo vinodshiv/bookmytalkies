@@ -1,0 +1,5 @@
+REM INSERTING into CS669.RECLINING_SEAT
+SET DEFINE OFF;
+Insert into CS669.RECLINING_SEAT (SEAT_ID) values ('1');
+Insert into CS669.RECLINING_SEAT (SEAT_ID) values ('2');
+Insert into CS669.RECLINING_SEAT (SEAT_ID) values ('3');

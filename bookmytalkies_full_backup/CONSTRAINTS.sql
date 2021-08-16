@@ -1,0 +1,120 @@
+--------------------------------------------------------
+--  Constraints for Table ACCESSIBLE_SEAT
+--------------------------------------------------------
+
+  ALTER TABLE "CS669"."ACCESSIBLE_SEAT" MODIFY ("SEAT_ID" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."ACCESSIBLE_SEAT" ADD PRIMARY KEY ("SEAT_ID")
+  USING INDEX  ENABLE;
+--------------------------------------------------------
+--  Constraints for Table BOOKING
+--------------------------------------------------------
+
+  ALTER TABLE "CS669"."BOOKING" MODIFY ("BOOKING_ID" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."BOOKING" MODIFY ("BKG_BOOKING_TIME" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."BOOKING" MODIFY ("BKG_NET_AMOUNT" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."BOOKING" MODIFY ("BKG_TAXES" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."BOOKING" ADD PRIMARY KEY ("BOOKING_ID")
+  USING INDEX  ENABLE;
+--------------------------------------------------------
+--  Constraints for Table BOX_SEAT
+--------------------------------------------------------
+
+  ALTER TABLE "CS669"."BOX_SEAT" MODIFY ("SEAT_ID" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."BOX_SEAT" ADD PRIMARY KEY ("SEAT_ID")
+  USING INDEX  ENABLE;
+--------------------------------------------------------
+--  Constraints for Table CUSTOMER
+--------------------------------------------------------
+
+  ALTER TABLE "CS669"."CUSTOMER" MODIFY ("CUSTOMER_ID" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."CUSTOMER" MODIFY ("CUS_FIRST_NAME" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."CUSTOMER" MODIFY ("CUS_LAST_NAME" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."CUSTOMER" MODIFY ("CUS_EMAIL" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."CUSTOMER" ADD PRIMARY KEY ("CUSTOMER_ID")
+  USING INDEX  ENABLE;
+--------------------------------------------------------
+--  Constraints for Table MOVIE
+--------------------------------------------------------
+
+  ALTER TABLE "CS669"."MOVIE" MODIFY ("MOVIE_ID" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."MOVIE" MODIFY ("MOV_MOVIE_TITLE" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."MOVIE" MODIFY ("MOV_STATUS" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."MOVIE" MODIFY ("MOV_ADULT_YN" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."MOVIE" ADD PRIMARY KEY ("MOVIE_ID")
+  USING INDEX  ENABLE;
+--------------------------------------------------------
+--  Constraints for Table NORMAL_SEAT
+--------------------------------------------------------
+
+  ALTER TABLE "CS669"."NORMAL_SEAT" MODIFY ("SEAT_ID" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."NORMAL_SEAT" ADD PRIMARY KEY ("SEAT_ID")
+  USING INDEX  ENABLE;
+--------------------------------------------------------
+--  Constraints for Table RECLINING_SEAT
+--------------------------------------------------------
+
+  ALTER TABLE "CS669"."RECLINING_SEAT" MODIFY ("SEAT_ID" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."RECLINING_SEAT" ADD PRIMARY KEY ("SEAT_ID")
+  USING INDEX  ENABLE;
+--------------------------------------------------------
+--  Constraints for Table SEAT
+--------------------------------------------------------
+
+  ALTER TABLE "CS669"."SEAT" MODIFY ("SEAT_ID" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."SEAT" MODIFY ("SEAT_ROW" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."SEAT" MODIFY ("SEAT_NUMBER" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."SEAT" ADD PRIMARY KEY ("SEAT_ID")
+  USING INDEX  ENABLE;
+--------------------------------------------------------
+--  Constraints for Table SEAT_RESERVATION
+--------------------------------------------------------
+
+  ALTER TABLE "CS669"."SEAT_RESERVATION" ADD CONSTRAINT "SEAT_RESERVATION_UNIQUE" UNIQUE ("SHOWTIME_ID", "SEAT_ID")
+  USING INDEX (CREATE UNIQUE INDEX "CS669"."SEAT_RESERVATION_UNIQUE_IDX" ON "CS669"."SEAT_RESERVATION" ("SHOWTIME_ID", "SEAT_ID") 
+  )  ENABLE;
+  ALTER TABLE "CS669"."SEAT_RESERVATION" MODIFY ("SEAT_RES_ID" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."SEAT_RESERVATION" ADD PRIMARY KEY ("SEAT_RES_ID")
+  USING INDEX  ENABLE;
+--------------------------------------------------------
+--  Constraints for Table SHIPPING_OFFERING
+--------------------------------------------------------
+
+  ALTER TABLE "CS669"."SHIPPING_OFFERING" MODIFY ("SHIPPING_OFFERING_ID" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."SHIPPING_OFFERING" MODIFY ("OFFERING" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."SHIPPING_OFFERING" ADD PRIMARY KEY ("SHIPPING_OFFERING_ID")
+  USING INDEX  ENABLE;
+--------------------------------------------------------
+--  Constraints for Table SHOWTIME
+--------------------------------------------------------
+
+  ALTER TABLE "CS669"."SHOWTIME" MODIFY ("SHOWTIME_ID" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."SHOWTIME" MODIFY ("SHW_START_DATE" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."SHOWTIME" MODIFY ("SHW_END_DATE" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."SHOWTIME" MODIFY ("SHW_START_TIME" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."SHOWTIME" MODIFY ("SHW_END_TIME" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."SHOWTIME" MODIFY ("SHW_LANGUAGE" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."SHOWTIME" MODIFY ("SHW_PRICE" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."SHOWTIME" ADD PRIMARY KEY ("SHOWTIME_ID")
+  USING INDEX  ENABLE;
+--------------------------------------------------------
+--  Constraints for Table TAX_RATES
+--------------------------------------------------------
+
+  ALTER TABLE "CS669"."TAX_RATES" MODIFY ("TAX_RATE_ID" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."TAX_RATES" MODIFY ("STATE_CODE" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."TAX_RATES" MODIFY ("STATE_NAME" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."TAX_RATES" MODIFY ("TAX_RATE" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."TAX_RATES" ADD PRIMARY KEY ("TAX_RATE_ID")
+  USING INDEX  ENABLE;
+--------------------------------------------------------
+--  Constraints for Table THEATER
+--------------------------------------------------------
+
+  ALTER TABLE "CS669"."THEATER" MODIFY ("THEATER_ID" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."THEATER" MODIFY ("THEATER_NAME" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."THEATER" MODIFY ("THTR_STREET" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."THEATER" MODIFY ("THTR_CITY" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."THEATER" MODIFY ("THTR_STATE" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."THEATER" MODIFY ("THTR_ZIPCODE" NOT NULL ENABLE);
+  ALTER TABLE "CS669"."THEATER" ADD PRIMARY KEY ("THEATER_ID")
+  USING INDEX  ENABLE;

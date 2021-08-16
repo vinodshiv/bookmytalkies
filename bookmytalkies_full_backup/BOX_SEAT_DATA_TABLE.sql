@@ -1,0 +1,22 @@
+REM INSERTING into CS669.BOX_SEAT
+SET DEFINE OFF;
+Insert into CS669.BOX_SEAT (SEAT_ID) values ('100');
+Insert into CS669.BOX_SEAT (SEAT_ID) values ('41');
+Insert into CS669.BOX_SEAT (SEAT_ID) values ('42');
+Insert into CS669.BOX_SEAT (SEAT_ID) values ('43');
+Insert into CS669.BOX_SEAT (SEAT_ID) values ('44');
+Insert into CS669.BOX_SEAT (SEAT_ID) values ('45');
+Insert into CS669.BOX_SEAT (SEAT_ID) values ('46');
+Insert into CS669.BOX_SEAT (SEAT_ID) values ('47');
+Insert into CS669.BOX_SEAT (SEAT_ID) values ('48');
+Insert into CS669.BOX_SEAT (SEAT_ID) values ('49');
+Insert into CS669.BOX_SEAT (SEAT_ID) values ('50');
+Insert into CS669.BOX_SEAT (SEAT_ID) values ('91');
+Insert into CS669.BOX_SEAT (SEAT_ID) values ('92');
+Insert into CS669.BOX_SEAT (SEAT_ID) values ('93');
+Insert into CS669.BOX_SEAT (SEAT_ID) values ('94');
+Insert into CS669.BOX_SEAT (SEAT_ID) values ('95');
+Insert into CS669.BOX_SEAT (SEAT_ID) values ('96');
+Insert into CS669.BOX_SEAT (SEAT_ID) values ('97');
+Insert into CS669.BOX_SEAT (SEAT_ID) values ('98');
+Insert into CS669.BOX_SEAT (SEAT_ID) values ('99');

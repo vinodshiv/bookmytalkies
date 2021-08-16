@@ -1,0 +1,22 @@
+REM INSERTING into CS669.ACCESSIBLE_SEAT
+SET DEFINE OFF;
+Insert into CS669.ACCESSIBLE_SEAT (SEAT_ID) values ('131');
+Insert into CS669.ACCESSIBLE_SEAT (SEAT_ID) values ('132');
+Insert into CS669.ACCESSIBLE_SEAT (SEAT_ID) values ('133');
+Insert into CS669.ACCESSIBLE_SEAT (SEAT_ID) values ('134');
+Insert into CS669.ACCESSIBLE_SEAT (SEAT_ID) values ('135');
+Insert into CS669.ACCESSIBLE_SEAT (SEAT_ID) values ('181');
+Insert into CS669.ACCESSIBLE_SEAT (SEAT_ID) values ('182');
+Insert into CS669.ACCESSIBLE_SEAT (SEAT_ID) values ('183');
+Insert into CS669.ACCESSIBLE_SEAT (SEAT_ID) values ('184');
+Insert into CS669.ACCESSIBLE_SEAT (SEAT_ID) values ('185');
+Insert into CS669.ACCESSIBLE_SEAT (SEAT_ID) values ('31');
+Insert into CS669.ACCESSIBLE_SEAT (SEAT_ID) values ('32');
+Insert into CS669.ACCESSIBLE_SEAT (SEAT_ID) values ('33');
+Insert into CS669.ACCESSIBLE_SEAT (SEAT_ID) values ('34');
+Insert into CS669.ACCESSIBLE_SEAT (SEAT_ID) values ('35');
+Insert into CS669.ACCESSIBLE_SEAT (SEAT_ID) values ('81');
+Insert into CS669.ACCESSIBLE_SEAT (SEAT_ID) values ('82');
+Insert into CS669.ACCESSIBLE_SEAT (SEAT_ID) values ('83');
+Insert into CS669.ACCESSIBLE_SEAT (SEAT_ID) values ('84');
+Insert into CS669.ACCESSIBLE_SEAT (SEAT_ID) values ('85');

@@ -1,0 +1,207 @@
+--------------------------------------------------------
+--  DDL for Procedure ADD_CUSTOMER
+--------------------------------------------------------
+set define off;
+
+  CREATE OR REPLACE EDITIONABLE PROCEDURE "CS669"."ADD_CUSTOMER" (
+    IN_CUSTOMER_ID IN VARCHAR,
+    IN_CUS_FIRST_NAME IN VARCHAR,
+    IN_CUS_LAST_NAME IN VARCHAR,
+    IN_CUS_DOB IN DATE,
+    IN_CUS_PHONE_NUM IN NUMBER,
+    IN_CUS_EMAIL IN VARCHAR,
+    IN_CUS_ZIPCODE IN NUMBER)
+    IS
+
+BEGIN
+    INSERT INTO CS669.CUSTOMER (CUSTOMER_ID, CUS_FIRST_NAME, CUS_LAST_NAME, CUS_DOB,
+                                CUS_PHONE_NUM, CUS_EMAIL, CUS_ZIPCODE)
+    VALUES (IN_CUSTOMER_ID, IN_CUS_FIRST_NAME, IN_CUS_LAST_NAME, IN_CUS_DOB,
+            IN_CUS_PHONE_NUM, IN_CUS_EMAIL, IN_CUS_ZIPCODE);
+
+    COMMIT;
+
+END;
+
+/
+--------------------------------------------------------
+--  DDL for Procedure ADD_SHOWTIME
+--------------------------------------------------------
+set define off;
+
+  CREATE OR REPLACE EDITIONABLE PROCEDURE "CS669"."ADD_SHOWTIME" (
+    IN_SHOWTIME_ID IN VARCHAR,
+    IN_SHW_START_TIME IN TIMESTAMP,
+    IN_SHW_END_TIME IN TIMESTAMP,
+    IN_SHW_LANGUAGE IN VARCHAR DEFAULT 'English',
+    IN_SHW_PRICE IN NUMBER,
+    IN_THEATER_NAME IN VARCHAR,
+    IN_MOVIE_TITLE IN VARCHAR)
+    IS
+    -- DECLARE VARIABLES TO HOLD VALUES
+    V_THEATER_ID VARCHAR(20); -- variable for theater ID
+    V_MOVIE_ID   VARCHAR(4000); -- variable for movie ID
+
+BEGIN
+    -- INITIALIZE VARIABLES
+    -- get THEATER_ID
+    SELECT THEATER_ID
+    INTO V_THEATER_ID
+    FROM CS669.THEATER
+    WHERE TRIM(UPPER(THEATER_NAME)) = TRIM(UPPER(IN_THEATER_NAME));
+
+    -- get MOVIE_ID
+    SELECT MOVIE_ID
+    INTO V_MOVIE_ID
+    FROM CS669.MOVIE
+    WHERE TRIM(UPPER(MOV_MOVIE_TITLE)) = TRIM(UPPER(IN_MOVIE_TITLE));
+
+
+    INSERT INTO CS669.SHOWTIME (SHOWTIME_ID, SHW_START_DATE, SHW_END_DATE, SHW_START_TIME,
+                                SHW_END_TIME, SHW_LANGUAGE, SHW_PRICE, THEATER_ID, MOVIE_ID)
+    VALUES (IN_SHOWTIME_ID, trunc(IN_SHW_START_TIME), trunc(IN_SHW_END_TIME), IN_SHW_START_TIME,
+            IN_SHW_END_TIME, IN_SHW_LANGUAGE, IN_SHW_PRICE, V_THEATER_ID, V_MOVIE_ID);
+
+    COMMIT;
+
+
+END;
+
+/
+--------------------------------------------------------
+--  DDL for Procedure ADD_THEATER
+--------------------------------------------------------
+set define off;
+
+  CREATE OR REPLACE EDITIONABLE PROCEDURE "CS669"."ADD_THEATER" (
+    IN_THEATER_ID IN VARCHAR,
+    IN_THEATER_NAME IN VARCHAR,
+    IN_THTR_STREET IN VARCHAR,
+    IN_THTR_CITY IN VARCHAR,
+    IN_THTR_STATE IN VARCHAR,
+    IN_THTR_ZIPCODE IN NUMBER)
+    IS
+    -- DECLARE VARIABLES TO HOLD VALUES
+    V_TAX_RATE_ID VARCHAR(4000); -- VARIABLE FOR TAX RATE ID
+    V_SEAT_ID     VARCHAR(4000); -- VARIABLE FOR SEAT ID
+
+    V_SEAT_VALUES CS669.SEAT_ROW_LIST; -- SEAT ROW VALUES
+
+BEGIN
+    -- INITIALIZE VARIABLES
+    SELECT TAX_RATE_ID
+    INTO V_TAX_RATE_ID
+    FROM CS669.TAX_RATES
+    WHERE TRIM(UPPER(STATE_CODE)) = TRIM(UPPER(IN_THTR_STATE));
+
+    V_SEAT_VALUES := CS669.SEAT_ROW_LIST('A', 'B', 'C', 'D', 'E');
+
+    SELECT NVL(MAX(CAST(SEAT_ID AS NUMBER)), 0) INTO V_SEAT_ID FROM CS669.SEAT;
+
+    --INSERT A ROW WITH THE COMBINED VALUES OF THE PARAMETERS AND THE VARIABLE.
+    INSERT INTO CS669.THEATER (THEATER_ID, THEATER_NAME, THTR_STREET, THTR_CITY, THTR_STATE, THTR_ZIPCODE, TAX_RATE_ID)
+    VALUES (IN_THEATER_ID, IN_THEATER_NAME, IN_THTR_STREET, IN_THTR_CITY, IN_THTR_STATE, IN_THTR_ZIPCODE,
+            V_TAX_RATE_ID);
+
+    COMMIT;
+
+    -- Insert 50 seats into SEAT for that theater ID. A1-A10 --> E1 to E10
+    FOR S_ROW IN V_SEAT_VALUES.FIRST..V_SEAT_VALUES.LAST
+        LOOP
+            FOR S_NUM IN 1..10
+                LOOP
+                    V_SEAT_ID := V_SEAT_ID + 1;
+                    INSERT INTO CS669.SEAT (SEAT_ID, SEAT_ROW, SEAT_NUMBER, THEATER_ID)
+                    VALUES (V_SEAT_ID, V_SEAT_VALUES(S_ROW), S_NUM, IN_THEATER_ID);
+
+                    COMMIT;
+
+                END LOOP;
+        END LOOP;
+
+    COMMIT;
+
+    -- Not considering SEAT's subtypes for the sake of simplicity here
+
+END;
+
+/
+--------------------------------------------------------
+--  DDL for Procedure MAKE_BOOKING
+--------------------------------------------------------
+set define off;
+
+  CREATE OR REPLACE EDITIONABLE PROCEDURE "CS669"."MAKE_BOOKING" (
+    IN_BOOKING_ID IN VARCHAR,
+    IN_CUSTOMER_NAME IN VARCHAR,
+    IN_SHOWTIME_ID IN VARCHAR,
+    IN_SEATS IN CS669.SEAT_ROW_LIST) -- list of seats for that booking
+    IS
+    -- DECLARE VARIABLES TO HOLD VALUES
+    V_CUS_ID      VARCHAR(4000); -- variable for CUSTOMER ID
+    V_TAXES       NUMBER; -- variable for taxes
+    V_NET_AMT     NUMBER; -- variable for net amount
+    V_SEAT_ID     VARCHAR(20); -- variable for seat ID
+    V_SEAT_VALUES CS669.SEAT_ROW_LIST; -- SEAT ROW VALUES
+
+BEGIN
+    -- INITIALIZE VARIABLES
+
+    -- get CUSTOMER_ID
+    SELECT CUSTOMER_ID
+    INTO V_CUS_ID
+    FROM CS669.CUSTOMER
+    WHERE TRIM(UPPER(CUS_FIRST_NAME || ' ' || CUS_LAST_NAME)) = TRIM(UPPER(IN_CUSTOMER_NAME));
+
+    -- get tax info and net amount
+    SELECT TAXES, (SHW_PRICE + TAXES)
+    INTO V_TAXES, V_NET_AMT
+    FROM (
+             SELECT B.THEATER_NAME,
+                    C.SHOWTIME_ID,
+                    C.SHW_PRICE,
+                    A.TAX_RATE,
+                    ROUND(C.SHW_PRICE * (A.TAX_RATE / 100), 2) AS TAXES
+             FROM CS669.THEATER B,
+                  CS669.TAX_RATES A,
+                  CS669.SHOWTIME C
+             WHERE A.TAX_RATE_ID = B.TAX_RATE_ID
+               AND B.THEATER_ID = C.THEATER_ID
+               AND C.SHOWTIME_ID = IN_SHOWTIME_ID);
+
+    -- insert into Booking
+    INSERT INTO CS669.BOOKING (BOOKING_ID, BKG_BOOKING_TIME, BKG_NET_AMOUNT, BKG_TAXES, BKG_STATUS, CUSTOMER_ID,
+                               SHOWTIME_ID)
+    VALUES (IN_BOOKING_ID, CURRENT_TIMESTAMP, V_NET_AMT, V_TAXES, 'Confirmed', V_CUS_ID, IN_SHOWTIME_ID);
+
+    COMMIT;
+
+    -- Prepare seats
+    --V_SEAT_VALUES := CS669.SEAT_ROW_LIST(IN_SEATS);
+
+    -- Insert 50 seats into SEAT for that theater ID. A1-A10 --> E1 to E10
+    FOR S_ROW IN IN_SEATS.FIRST..IN_SEATS.LAST
+        LOOP
+            -- get SEAT_ID
+            SELECT E.SEAT_ID
+            INTO V_SEAT_ID
+            FROM CS669.SEAT E,
+                 CS669.THEATER D,
+                 CS669.SHOWTIME F
+            WHERE D.THEATER_ID = E.THEATER_ID
+              AND D.THEATER_ID = F.THEATER_ID
+              AND F.SHOWTIME_ID = IN_SHOWTIME_ID
+              AND TRIM(SEAT_ROW || SEAT_NUMBER) =
+                  TRIM(SUBSTR(IN_SEATS(S_ROW), 1, 1) || SUBSTR(IN_SEATS(S_ROW), 2));
+
+
+            INSERT INTO CS669.SEAT_RESERVATION (SEAT_RES_ID, BOOKING_ID, SEAT_ID, SHOWTIME_ID)
+            VALUES ((SELECT NVL(MAX(CAST(SEAT_RES_ID AS NUMBER)), 0) + 1 FROM CS669.SEAT_RESERVATION), IN_BOOKING_ID,
+                    V_SEAT_ID, IN_SHOWTIME_ID);
+
+        END LOOP;
+    COMMIT;
+
+END;
+
+/
